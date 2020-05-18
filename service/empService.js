@@ -6,10 +6,16 @@ export const getEmployees = async ()=>
     var employeesList = [];
     employees.rows.map(employee => {
         var employeeObj = {};
-        employees.rowDescription.columns.map((data, index) => {         
-            employeeObj[data.name]=employee[index];           
+        var occObj={};
+        employees.rowDescription.columns.map((data, index) => {   
+            if(data.name == 'occupations_id'){ occObj[data.name]=employee[index];}
+            else if(data.name == 'job_name'){ occObj[data.name]=employee[index];}
+            else if (data.name == 'description'){ occObj[data.name]=employee[index];}
+            else {employeeObj[data.name]=employee[index];}
         });
+        employeeObj['job_details']=occObj;
         employeesList.push(employeeObj);
+        
     });
     return employeesList;
 }
@@ -18,11 +24,16 @@ export const getEmployee = async (id) =>
 {
     const employee = await empRepo.findById(id);
     var employeeObj = {};
+    var occObj = {};
     employee.rows.map(emp => {
-        employee.rowDescription.columns.map((data, index) => {          
-            employeeObj[data.name]=emp[index];           
+        employee.rowDescription.columns.map((data, index) => {
+            if(data.name == 'occupations_id'){ occObj[data.name]=emp[index];}
+            else if(data.name == 'job_name'){ occObj[data.name]=emp[index];}
+            else if (data.name == 'description'){ occObj[data.name]=emp[index];}
+            else {employeeObj[data.name]=emp[index];}                 
         });
     });
+    employeeObj['job_details']=occObj;
     return employeeObj;
 }
 
@@ -35,7 +46,7 @@ export const createEmployee = async (employee)=>
         contact:String(employee.contact),
         created_at:new Date(),
         updated_at:new Date(),
-        occupations_id:1,
+        occupations_id:parseInt(employee.occupations_id),
     }
     const created = await empRepo.create(newEmployee);
     created.rows.map(row=>{
@@ -51,7 +62,7 @@ export const updateEmployee = async (id, employee)=>{
         email:String(employee.email),
         contact:String(employee.contact),
         updated_at:new Date(),
-        occupations_id:1,
+        occupations_id:parseInt(employee.occupations_id),
     }
     const updateId = parseInt(id);
     await empRepo.update(updateId, updatedEmployee);

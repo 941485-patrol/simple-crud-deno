@@ -4,14 +4,16 @@ class EmployeeRepository
 {
     findAll = ()=>
     {
-        var query = "SELECT * FROM employees ORDER BY id";
+        var select = " e.id, e.name AS employee_name, e.email, e.contact, e.created_at, e.updated_at, e.occupations_id, o.name AS job_name, o.description "
+        var query = "SELECT"+select+"FROM employees AS e LEFT JOIN occupations AS o ON e.occupations_id = o.id ORDER BY id";
         var result = client.query(query);
         return result;
     }
 
     findById = (id)=>
     {
-        var query = "SELECT * FROM employees WHERE id= $1";
+        var select = " e.id, e.name AS employee_name, e.email, e.contact, e.created_at, e.updated_at, e.occupations_id, o.name AS job_name, o.description "
+        var query = "SELECT"+select+"FROM employees AS e LEFT JOIN occupations AS o ON e.occupations_id = o.id WHERE e.id= $1";
         var result = client.query(query, id);
         return result;
     }

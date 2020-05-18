@@ -1,4 +1,4 @@
-import {updateEmployee} from "../service/empService.js";
+import {updateEmployee} from "../../service/empService.js";
 
 export default async ({params, request, response}) => 
 {
@@ -8,7 +8,7 @@ export default async ({params, request, response}) =>
         name: result.value.name,
         email: result.value.email,
         contact: result.value.contact,
-        // occupations_id = result.value.occuptions_id,
+        occupations_id : result.value.occupations_id,
     }
     await updateEmployee(updateEmpId, employee);
     response.body = {msg: "Updated"};
